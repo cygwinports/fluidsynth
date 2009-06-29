@@ -1,5 +1,5 @@
 category: Audio
-requires: cygwin libfluidsynth1 readline w32api
+requires: libfluidsynth1 readline w32api
 external-source: fluidsynth
 sdesc: "SoundFont software synthesizer (libdevel)"
 ldesc: "FluidSynth is a real-time software synthesizer based on the
