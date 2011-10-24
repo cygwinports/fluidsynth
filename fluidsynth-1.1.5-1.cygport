@@ -1,0 +1,24 @@
+DESCRIPTION="SoundFont software synthesizer"
+HOMEPAGE="http://sourceforge.net/apps/trac/fluidsynth/"
+SRC_URI="mirror://sourceforge/fluidsynth/${P}.tar.bz2"
+
+PATCH_URI="1.1.5-cygwin-winmm.patch
+	   1.1.5-vpath.patch"
+
+PKG_NAMES="${PN} lib${PN}1 lib${PN}-devel"
+fluidsynth_CONTENTS="usr/bin/*.exe usr/share/"
+libfluidsynth1_CONTENTS="usr/bin/cygfluidsynth-1.dll"
+libfluidsynth_devel_CONTENTS="usr/include/ usr/lib/"
+
+# dbus-support:  only for RealtimeKit
+CYGCONF_ARGS="
+  --disable-alsa-support
+  --disable-oss-support
+  --disable-midishare
+  --disable-coreaudio
+  --disable-dbus-support
+  --disable-lash
+  --disable-ladcca
+  --enable-portaudio
+  ac_cv_header_windows_h=no
+"
