@@ -1,5 +1,5 @@
 category: Audio
-requires: libglib2.0_0 libportaudio2 libreadline7 libsndfile1
+requires: libgcc1 libglib2.0_0 libportaudio2 libpulse-simple0 libreadline7 libsndfile1
 external-source: fluidsynth
 sdesc: "SoundFont software synthesizer (runtime)"
 ldesc: "FluidSynth is a real-time software synthesizer based on the

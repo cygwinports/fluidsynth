@@ -11,6 +11,7 @@ libfluidsynth1_CONTENTS="usr/bin/cygfluidsynth-1.dll"
 libfluidsynth_devel_CONTENTS="usr/include/ usr/lib/"
 
 # dbus-support:  only for RealtimeKit
+# oss-support:  requires both /dev/dsp and /dev/midi, we don't have the latter
 CYGCONF_ARGS="
   --disable-alsa-support
   --disable-oss-support
@@ -19,6 +20,5 @@ CYGCONF_ARGS="
   --disable-dbus-support
   --disable-lash
   --disable-ladcca
-  --enable-portaudio
   ac_cv_header_windows_h=no
 "
