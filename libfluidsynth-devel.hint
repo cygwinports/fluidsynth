@@ -1,6 +1,0 @@
-category: Audio
-requires: libfluidsynth1 libglib2.0-devel libportaudio-devel libpulse-devel readline libsndfile-devel
-external-source: fluidsynth
-sdesc: "SoundFont software synthesizer (libdevel)"
-ldesc: "FluidSynth is a real-time software synthesizer based on the
-SoundFont 2 specifications."

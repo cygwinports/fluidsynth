@@ -1,13 +1,23 @@
-DESCRIPTION="SoundFont software synthesizer"
+NAME="fluidsynth"
+VERSION=1.1.6
+RELEASE=1
+CATEGORY="Audio"
+SUMMARY="SoundFont software synthesizer"
+DESCRIPTION="FluidSynth is a real-time software synthesizer based on the
+SoundFont 2 specifications."
 HOMEPAGE="http://sourceforge.net/apps/trac/fluidsynth/"
 SRC_URI="mirror://sourceforge/fluidsynth/${P}.tar.bz2"
 
 PATCH_URI="1.1.5-cygwin-winmm.patch
 	   1.1.5-vpath.patch"
 
-PKG_NAMES="${PN} lib${PN}1 lib${PN}-devel"
+PKG_NAMES="${NAME} lib${NAME}1 lib${NAME}-devel"
 fluidsynth_CONTENTS="usr/bin/*.exe usr/share/"
+libfluidsynth1_CATEGORY="Libs"
+libfluidsynth1_SUMMARY="${SUMMARY} library"
 libfluidsynth1_CONTENTS="usr/bin/cygfluidsynth-1.dll"
+libfluidsynth_devel_CATEGORY="Libs"
+libfluidsynth_devel_SUMMARY="${SUMMARY} library"
 libfluidsynth_devel_CONTENTS="usr/include/ usr/lib/"
 
 # dbus-support:  only for RealtimeKit

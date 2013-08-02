@@ -1,5 +1,0 @@
-category: Audio
-requires: libfluidsynth1
-sdesc: "SoundFont software synthesizer (app)"
-ldesc: "FluidSynth is a real-time software synthesizer based on the
-SoundFont 2 specifications."
