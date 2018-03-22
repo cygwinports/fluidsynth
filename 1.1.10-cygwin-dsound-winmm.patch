@@ -1,0 +1,108 @@
+--- origsrc/fluidsynth-1.1.10/CMakeLists.txt	2018-02-24 11:32:40.000000000 -0600
++++ src/fluidsynth-1.1.10/CMakeLists.txt	2018-03-21 17:25:05.179553800 -0500
+@@ -88,7 +88,7 @@ if ( CMAKE_SYSTEM MATCHES "OS2" )
+ endif ( CMAKE_SYSTEM MATCHES "OS2" )
+ 
+ # Initialize the library directory name suffix.
+-if (NOT MINGW AND NOT MSVC)
++if (NOT WIN32 AND NOT CYGWIN)
+ if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+   set ( _init_lib_suffix "64" )
+ else ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+@@ -165,14 +165,14 @@ endif ( CMAKE_COMPILER_IS_GNUCC OR "${CM
+ unset ( WINDOWS_SUPPORT CACHE )
+ unset ( WINDOWS_LIBS CACHE )
+ unset ( MINGW32 CACHE )
+-if ( WIN32 )
++if ( WIN32 OR CYGWIN )
+   include ( CheckIncludeFiles )
+   check_include_file ( windows.h HAVE_WINDOWS_H )
+   check_include_file ( io.h HAVE_IO_H )
+   check_include_file ( dsound.h HAVE_DSOUND_H )
+   check_include_files ( "windows.h;mmsystem.h" HAVE_MMSYSTEM_H )
+   set ( WINDOWS_SUPPORT ${HAVE_WINDOWS_H} )
+-  set ( WINDOWS_LIBS "dsound;winmm;ws2_32" )
++  set ( WINDOWS_LIBS "dsound;winmm" )
+   set ( LIBFLUID_CPPFLAGS "-DFLUIDSYNTH_DLL_EXPORTS" )
+   set ( FLUID_CPPFLAGS "-DFLUIDSYNTH_NOT_A_DLL" )
+   if (NOT MSVC)
+@@ -183,12 +183,12 @@ if ( WIN32 )
+     set ( MINGW32 1 )
+     add_definitions ( -mms-bitfields )
+   endif  ( MINGW )
+-else ( WIN32 )
++else ( WIN32 OR CYGWIN )
+ # Check PThreads, but not in Windows
+   find_package ( Threads REQUIRED )
+   set ( HAVE_LIBPTHREAD ${Threads_FOUND} )
+   set ( LIBFLUID_LIBS "m" ${CMAKE_THREAD_LIBS_INIT} )
+-endif ( WIN32 )
++endif ( WIN32 OR CYGWIN )
+ 
+ # IBM OS/2
+ unset ( DART_SUPPORT CACHE )
+--- origsrc/fluidsynth-1.1.10/cmake_admin/FindOSS.cmake	2018-02-24 11:32:40.000000000 -0600
++++ src/fluidsynth-1.1.10/cmake_admin/FindOSS.cmake	2018-03-21 17:13:19.154167200 -0500
+@@ -20,7 +20,7 @@ FIND_PATH(MACHINE_OSS_INCLUDE_DIR "machi
+ SET(OSS_FOUND FALSE)
+ 
+ 
+-if ( NOT WIN32 )
++if ( NOT WIN32 AND NOT CYGWIN )
+ 
+     IF(LINUX_OSS_INCLUDE_DIR)
+             SET(OSS_FOUND TRUE)
+@@ -40,7 +40,7 @@ if ( NOT WIN32 )
+             SET(HAVE_MACHINE_SOUNDCARD_H 1)
+     ENDIF()
+ 
+-ENDIF(NOT WIN32)
++ENDIF(NOT WIN32 AND NOT CYGWIN)
+ 
+ MARK_AS_ADVANCED (
+ 	OSS_FOUND
+--- origsrc/fluidsynth-1.1.10/src/CMakeLists.txt	2018-02-24 11:32:40.000000000 -0600
++++ src/fluidsynth-1.1.10/src/CMakeLists.txt	2018-03-21 17:13:50.746488600 -0500
+@@ -304,7 +304,6 @@ elseif ( WIN32 )
+ else ( MACOSX_FRAMEWORK )
+   set_target_properties ( libfluidsynth
+     PROPERTIES
+-      PREFIX "lib"
+       OUTPUT_NAME "fluidsynth"
+       VERSION ${LIB_VERSION_INFO}
+       SOVERSION ${LIB_VERSION_CURRENT}
+--- origsrc/fluidsynth-1.1.10/src/drivers/fluid_dsound.c	2018-02-24 11:32:40.000000000 -0600
++++ src/fluidsynth-1.1.10/src/drivers/fluid_dsound.c	2018-03-21 13:36:20.628698300 -0500
+@@ -26,6 +26,7 @@
+ #include "fluid_sys.h"
+ #include "fluid_adriver.h"
+ #include "fluid_settings.h"
++#include <windows.h>
+ #include <mmsystem.h>
+ #include <dsound.h>
+ 
+--- origsrc/fluidsynth-1.1.10/src/drivers/fluid_winmidi.c	2018-02-24 11:32:40.000000000 -0600
++++ src/fluidsynth-1.1.10/src/drivers/fluid_winmidi.c	2018-03-21 13:17:58.331037100 -0500
+@@ -37,6 +37,8 @@
+ #include "fluid_midi.h"
+ #include "fluid_mdriver.h"
+ #include "fluid_settings.h"
++#include <windows.h>
++#include <mmsystem.h>
+ 
+ #define MIDI_SYSEX_MAX_SIZE     512
+ #define MIDI_SYSEX_BUF_COUNT    16
+--- origsrc/fluidsynth-1.1.10/src/utils/fluidsynth_priv.h	2018-02-24 11:32:40.000000000 -0600
++++ src/fluidsynth-1.1.10/src/utils/fluidsynth_priv.h	2018-03-21 13:36:41.061748000 -0500
+@@ -140,6 +140,11 @@
+ #define WITHOUT_SERVER 1
+ #endif
+ 
++#ifdef __CYGWIN__
++#define DSOUND_SUPPORT 1
++#define WINMIDI_SUPPORT 1
++#endif
++
+ 
+ #include "fluidsynth.h"
+ 

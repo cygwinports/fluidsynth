@@ -1,15 +1,15 @@
+inherit cmake
+
 NAME="fluidsynth"
-VERSION=1.1.6
+VERSION=1.1.10
 RELEASE=1
 CATEGORY="Audio"
 SUMMARY="SoundFont software synthesizer"
 DESCRIPTION="FluidSynth is a real-time software synthesizer based on the
 SoundFont 2 specifications."
-HOMEPAGE="http://sourceforge.net/apps/trac/fluidsynth/"
-SRC_URI="mirror://sourceforge/fluidsynth/${P}.tar.bz2"
-
-PATCH_URI="1.1.5-cygwin-winmm.patch
-	   1.1.5-vpath.patch"
+HOMEPAGE="http://www.fluidsynth.org/"
+SRC_URI="https://github.com/FluidSynth/fluidsynth/archive/v${VERSION}/fluidsynth-${VERSION}.tar.gz"
+PATCH_URI="1.1.10-cygwin-dsound-winmm.patch"
 
 PKG_NAMES="${NAME} lib${NAME}1 lib${NAME}-devel"
 fluidsynth_CONTENTS="usr/bin/*.exe usr/share/"
@@ -18,17 +18,16 @@ libfluidsynth1_SUMMARY="${SUMMARY} library"
 libfluidsynth1_CONTENTS="usr/bin/cygfluidsynth-1.dll"
 libfluidsynth_devel_CATEGORY="Libs"
 libfluidsynth_devel_SUMMARY="${SUMMARY} library"
-libfluidsynth_devel_CONTENTS="usr/include/ usr/lib/"
+libfluidsynth_devel_CONTENTS="
+	usr/include/fluidsynth*
+	usr/lib/libfluidsynth.dll.a
+	usr/lib/pkgconfig/fluidsynth.pc
+"
 
-# dbus-support:  only for RealtimeKit
-# oss-support:  requires both /dev/dsp and /dev/midi, we don't have the latter
-CYGCONF_ARGS="
-  --disable-alsa-support
-  --disable-oss-support
-  --disable-midishare
-  --disable-coreaudio
-  --disable-dbus-support
-  --disable-lash
-  --disable-ladcca
-  ac_cv_header_windows_h=no
+# dbus: only for RealtimeKit
+# portaudio: playback is just static
+CYGCMAKE_ARGS="
+	-Denable-dbus=OFF
+	-Denable-midishare=OFF
+	-Denable-portaudio=OFF
 "
